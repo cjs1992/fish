@@ -90,21 +90,10 @@ class Game {
     }
     window.onresize()
 
-    canvas.onmousemove = (e) => {
-      const x1 = d.mouse.x = e.offsetX
-      const y1 = d.mouse.y = e.offsetY
 
-      d.cannon.forEach((v) => {
-        const x2 = v.d.x
-        const y2 = v.d.y
-
-        v.d.angle = d2a(a2d(Math.atan2(y2 - y1, x2 - x1)) - 90)
-      })
-    }
-
-    canvas.onmousedown = (e) => {
-      const x4 = e.offsetX
-      const y4 = e.offsetY
+    const handleStart = (e) => {
+      const x4 = e.clientX || e.touches?.[0]?.clientX
+      const y4 = e.clientY || e.touches?.[0]?.clientY
 
       const bullets = d.cannon.map((cannon) => {
         const x1 = cannon.d.x
@@ -142,7 +131,7 @@ class Game {
           totalLength: path.getTotalLength(),
           points,
           timeStart: Date.now(),
-          duration: 3000,
+          duration: 2000,
           x: cannon.d.x,
           y: cannon.d.y,
         })
@@ -150,12 +139,30 @@ class Game {
 
       d.bullets = d.bullets.concat(bullets)
     }
+
+    const handleMove = (e) => {
+      const x1 = d.mouse.x = e.clientX || e.touches?.[0]?.clientX
+      const y1 = d.mouse.y = e.clientY || e.touches?.[0]?.clientY
+
+      d.cannon.forEach((v) => {
+        const x2 = v.d.x
+        const y2 = v.d.y
+
+        v.d.angle = d2a(a2d(Math.atan2(y2 - y1, x2 - x1)) - 90)
+      })
+    }
+
+    canvas.addEventListener('mousedown', handleStart, {passive: false})
+    canvas.addEventListener('touchstart', handleStart, {passive: false})
+
+    canvas.addEventListener('mousemove', handleMove, {passive: false})
+    canvas.addEventListener('touchmove', handleMove, {passive: false})
   }
   async loopRender() {
     const me = this
     const d = me.d
     const loopRender = () => {
-      d.timerAni = setTimeout(() => {
+      d.timerAni = requestAnimationFrame(() => {
         ++d.countFrame
 
         ;[d.fishs, d.bullets, d.coins, d.nets, d.bottom, d.cannon].forEach((row) => {
@@ -166,12 +173,12 @@ class Game {
 
         me.render()
         loopRender()
-      }, 30)
+      }, 300)
     }
     loopRender()
   }
   async render() {
-    console.log('render')
+    // console.log('render')
     const me = this
     const d = me.d
     const canvas = d.canvas
@@ -179,11 +186,11 @@ class Game {
 
     gd.clearRect(0, 0, canvas.width, canvas.height)
 
-    gd.fillStyle = 'rgba(0,170,255,.1)'
-    gd.fillRect((d.w - 1000) / 2, d.h - 100, 1000, 100)
+    // gd.fillStyle = 'rgba(0,170,255,.1)'
+    // gd.fillRect((d.w - 1000) / 2, d.h - 100, 1000, 100)
 
     gd.save()
-    ;[d.fishs, d.coins, d.nets, d.bottom, d.cannon, d.bullets].forEach((row) => {
+    ;[d.fishs, d.coins, d.nets, d.bottom, d.bullets, d.cannon].forEach((row) => {
       row.forEach((v) => {
         const d = v.d
         const el = pList[d.link]
@@ -215,8 +222,8 @@ class Game {
         gd.translate(d.x, d.y)
         d.angle && gd.rotate(d.angle)
         d.scale && gd.scale(d.scale[0], d.scale[1])
-        gd.fillStyle = 'rgba(255,0,0,.1)'
-        gd.fillRect(-el.width / 2, -el.height / 2, el.width, el.height)
+        // gd.fillStyle = 'rgba(255,0,0,.1)'
+        // gd.fillRect(-el.width / 2, -el.height / 2, el.width, el.height)
         gd.drawImage(
           el.img,
           el.x, el.y, el.width, el.height,
