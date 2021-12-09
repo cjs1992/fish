@@ -12,8 +12,8 @@ function d2a(deg) {
   return deg / 180 * Math.PI
 }
 
-function a2d(angle) {
-  return angle * 180 / Math.PI
+function a2d(rotation) {
+  return rotation * 180 / Math.PI
 }
 
 Array.prototype.first = function() {
