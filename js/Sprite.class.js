@@ -9,6 +9,7 @@ class Sprite {
     d.y = d.y || d.y1 || 0
     d.curFrame = 0
     d.fric = 10
+    d.svgNS = 'http://www.w3.org/2000/svg'
 
     d.isCannon = /cannon/i.test(d.link)
     d.isBullet = /bullet/i.test(d.link)

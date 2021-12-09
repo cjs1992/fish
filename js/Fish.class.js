@@ -2,7 +2,11 @@ class Fish extends Sprite {
   constructor(link, d = {}) {
     super(...arguments)
 
-    // d.v = Math.ceil(d.v) || 10
+    d.v = d.v || 0
+    d.fric = d.v ? Math.ceil(10 - d.v) : 8
+    d.curFrame = 0
+    d.isAlive = true
+    d.blood = d.el.blood
 
     const [
       {x: x1, y: y1},
@@ -10,12 +14,8 @@ class Fish extends Sprite {
       {x: x3, y: y3},
     ] = d.points
 
-    d.fric = d.v ? Math.ceil(10 - d.v) : 8
-    d.curFrame = 0
-
     if (d.usingCurve) {
-      const ns = 'http://www.w3.org/2000/svg'
-      const g = document.createElementNS(ns, 'g')
+      const g = document.createElementNS(d.svgNS, 'g')
 
       g.innerHTML = `
         <path
@@ -31,13 +31,14 @@ class Fish extends Sprite {
       d.path = g.children[0]
       d.totalLength = d.path.getTotalLength()
       d.curLength = 0
-    } else if (d.v) {
+    } else {
       // 计算斜率
       const rotation = d.rotation = Math.atan2((y3 - y1), (x3 - x1))
       d.vx = Math.cos(rotation) * d.v
       d.vy = Math.sin(rotation) * d.v
       d.x = d.x || x1
       d.y = d.y || y1
+      console.log(d.x, d.y)
     }
   }
   nextFrame(scene) {

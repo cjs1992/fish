@@ -2,7 +2,6 @@ class Scene {
   constructor(d = {}, ready) {
     const me = this
 
-    d.svgNS = 'http://www.w3.org/2000/svg'
     d.edgeR = 500
     d.countFrame = 0
     d.score = 123
@@ -41,7 +40,7 @@ class Scene {
     const me = this
     const d = me.d
 
-    return Promise.all(Object.values(d.pList).map((val) => {
+    return Promise.all(Object.values(pList).map((val) => {
       return new Promise((next) => {
         const img = val.img = new Image()
         img.onload = next
@@ -86,7 +85,7 @@ class Scene {
         const space = cannonWidth / (d.cannons.length + 1)
 
         d.cannons.forEach((v, idx) => {
-          const el = pList[v.d.link]
+          const el = v.d.el
 
           v.d.x = lrSpace + bottomWidth + (idx + 1) * space
           v.d.y = d.h - el.height / 2
@@ -99,12 +98,12 @@ class Scene {
       // 调整 cannon rotation
       handleMove(e)
 
-      const x4 = e.clientX || e.touches?.[0]?.clientX
-      const y4 = e.clientY || e.touches?.[0]?.clientY
+      const x4 = d.mouse.x = e.clientX || e.touches?.[0]?.clientX
+      const y4 = d.mouse.y = e.clientY || e.touches?.[0]?.clientY
 
       const bullets = d.cannons.map((cannon) => {
         const d = cannon.d
-        const el = pList[d.link]
+        const el = d.el
         const linkBullet = 'bullet' + d.link.match(/\d+$/)[0]
         const x1 = d.x + Math.cos(d2a(a2d(d.rotation) - 90)) * el.height / 2
         const y1 = d.y + Math.sin(d2a(a2d(d.rotation) - 90)) * el.height / 2
@@ -150,13 +149,6 @@ class Scene {
     const loopRender = () => {
       d.timerAni = requestAnimationFrame(() => {
         ++d.countFrame
-
-        ;[d.fishs, d.bullets, d.coins, d.nets, d.bottom, d.cannons].forEach((row) => {
-          row.forEach((v) => {
-            v.nextFrame(me)
-          })
-        })
-
         me.render()
         loopRender()
       }, 300)
@@ -180,10 +172,83 @@ class Scene {
     // gd.fillStyle = 'rgba(255,0,0,.2)'
     // gd.fill()
     
+    gd.font = 'bold 20px Arial'
+    gd.textAlign = 'center'
+    gd.textBaseline = 'middle'
+
+    ;[d.fishs, d.coins, d.nets, d.bottom, d.cannons, d.bullets].forEach((row) => {
+      row.forEach((v) => {
+        if (!v) return
+          
+        v.nextFrame(me)
+
+        const d = v.d
+        const el = d.el
+
+        gd.save()
+        gd.translate(d.x, d.y)
+        d.rotation && gd.rotate(d.rotation)
+        d.scale && gd.scale(d.scale[0], d.scale[1])
+        // gd.beginPath()
+        // gd.fillStyle = 'rgba(255,0,0,.3)'
+        // gd.fillRect(-el.width / 2, -el.height / 2, el.width - 1, el.height)
+
+        gd.beginPath()
+
+        if (el.frameAlive) {
+          gd.fillStyle = 'rgba(0,255,0,.2)'
+          gd.rect(
+            -el.rec.width / 2 + el.rec.x,
+            -el.rec.height / 2 + el.rec.y/* - ((el.height - el.rec.height) / 2)*/,
+            el.rec.width,
+            el.rec.height,
+          )
+          gd.fill()
+
+          for (let i = 0; i  < me.d.bullets.length; i++) {
+            const bullet = me.d.bullets[i]
+
+            if (v.d.isAlive && gd.isPointInPath(bullet.d.x, bullet.d.y)) {
+              bullet.attack(me, v)
+              me.d.bullets.remove(bullet)
+              i--
+            }
+          }
+
+          gd.beginPath()
+          gd.drawImage(
+            el.img,
+            el.x, d.curFrame * el.height, el.width, el.height,
+            -el.width / 2, -el.height / 2, el.width, el.height,
+          )
+
+          gd.save()
+          gd.translate(el.width / 2, 0)
+          gd.rotate(d2a(90))
+          gd.fillStyle = 'red'
+          gd.fillText(d.blood, 0, 0)
+          gd.restore()
+        } else if (d.isCannon) {
+          gd.drawImage(
+            el.img,
+            el.x, (d.curFrame < 5 ? d.curFrame : 0) * el.height, el.width, el.height,
+            -el.width / 2, -el.height / 2, el.width, el.height,
+          )
+        } else {
+          gd.drawImage(
+            el.img,
+            el.x, el.y, el.width, el.height,
+            -el.width / 2, -el.height / 2, el.width, el.height,
+          )
+        }
+        gd.restore()
+      })
+    })
+
     ;[d.fishs, d.bullets].forEach((row) => {
       row.forEach((v) => {
         const d = v.d
-        const el = pList[d.link]
+        const el = d.el
 
         if (d.usingCurve) {
           gd.save()
@@ -228,41 +293,7 @@ class Scene {
       })
     })
 
-    ;[d.fishs, d.coins, d.nets, d.bottom, d.cannons, d.bullets].forEach((row) => {
-      row.forEach((v) => {
-        const d = v.d
-        const el = pList[d.link]
-
-        gd.save()
-        gd.translate(d.x, d.y)
-        d.rotation && gd.rotate(d.rotation)
-        d.scale && gd.scale(d.scale[0], d.scale[1])
-        // gd.fillStyle = 'rgba(255,0,0,.3)'
-        // gd.fillRect(-el.width / 2, -el.height / 2, el.width, el.height)
-
-        if (d.el.frameAlive) {
-          gd.drawImage(
-            el.img,
-            el.x, d.curFrame * d.el.height, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-        } else if (d.isCannon) {
-          gd.drawImage(
-            el.img,
-            el.x, (d.curFrame < 5 ? d.curFrame : 0) * d.el.height, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-        } else {
-          gd.drawImage(
-            el.img,
-            el.x, el.y, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-        }
-        gd.restore()
-      })
-    })
-
+    // 绘制分数
     {
       const el = pList.numberBlack
       const translateX = d.bottom[0].d.x - d.bottom[0].d.el.width / 2 + 24

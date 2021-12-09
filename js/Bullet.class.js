@@ -8,7 +8,8 @@ class Bullet extends Sprite {
     const x4 = d.x4
     const y4 = d.y4
 
-    d.v = d.v || 6
+    d.hurt = d.el.hurt
+    d.v = d.v || 10
 
     if (d.usingCurve) {
       const x2 = x4
@@ -23,8 +24,7 @@ class Bullet extends Sprite {
         {x: x3, y: y3},
         {x: x4, y: y4},
       ]
-      const ns = 'http://www.w3.org/2000/svg'
-      const g = document.createElementNS(ns, 'g')
+      const g = document.createElementNS(d.svgNS, 'g')
 
       g.innerHTML = `
         <path
@@ -85,5 +85,15 @@ class Bullet extends Sprite {
         scene.d.bullets.remove(me)
       }
     }
+  }
+  attack(scene, fish) {
+    const bullet = this
+    
+    fish.d.blood -= bullet.d.hurt
+
+    scene.d.nets.push(new Net(bullet.d.link.replace('bullet', 'net'), {
+      x: bullet.d.x,
+      y: bullet.d.y,
+    }))
   }
 }

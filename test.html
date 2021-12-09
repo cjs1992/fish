@@ -3,93 +3,71 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <link rel="shortcut icon" href="./img/favicon.ico" type="image/x-icon">
+  <title>test.html</title>
   <style>
-    * {padding: 0; margin: 0; font: inherit;}
+    * {padding: 0; margin: 0; font: inherit; box-sizing: border-box;}
     html, body {height: 100%;}
-    body {background: #000;}
+    body {height: 100%; background: #000; overflow: hidden;}
 
-    #canvas {width: 100%; height: 100%;}
-
-    #svg {width: 500px ;height: 500px; background: rgba(255, 0, 0, .2); position: absolute; left: 0; top: 0;}
+    #canvas {height: 100%; vertical-align: top;}
   </style>
 </head>
 <body>
-  
-<canvas id="canvas"></canvas>
 
-<svg id="svg">
-</svg>
+<canvas id="canvas"></canvas>
 
 <script>
 const canvas = document.getElementById('canvas')
 const gd = canvas.getContext('2d')
-const ns = 'http://www.w3.org/2000/svg'
 
-const svg = document.getElementById('svg')
-const g = document.createElementNS(ns, 'g')
-const path = [
-  {x: 100, y: 100},
-  {x: 100, y: 100},
-  {x: 100, y: 100},
-  {x: 300, y: 300},
-]
+window.onresize = () => {
+  const w = canvas.offsetWidth
+  const h = canvas.offsetHeight
 
-path[1].x = path[0].x
-path[1].y = (path[0].y + path[3].y) / 2
-
-path[2].x = path[3].x
-path[2].y = (path[0].y + path[3].y) / 2
-
-g.innerHTML = `
-  <path
-    d="M ${path[0].x} ${path[0].y} C ${path[1].x} ${path[1].y}, ${path[2].x} ${path[2].y}, ${path[3].x} ${path[3].y}"
-    stroke="red"
-    stroke-width="2"
-    fill="transparent"
-  ></path>
-
-  <circle cx="${path[0].x}" cy="${path[0].y}" r="20" fill="rgba(0,255,0,.5)"></circle>
-`
-
-const elPath = g.getElementsByTagName('path')[0]
-const elCircle = g.getElementsByTagName('circle')[0]
-
-// svg.appendChild(g)
-
-console.log(elPath)
-console.log(elCircle)
-const len = elPath.getTotalLength()
-const duration = 1000
-const timeStart = Date.now()
-
-console.log(elCircle.getAttribute('cx'))
-console.log(elCircle.getAttribute('cy'))
-
-elCircle.setAttribute('cx', 200)
-elCircle.setAttribute('cy', 200)
-
-const loopRender = () => {
-  requestAnimationFrame(() => {
-    const timeDis = Date.now() - timeStart
-    const scale = timeDis / duration
-    const p = elPath.getPointAtLength(scale * len)
-
-    elCircle.setAttribute('cx', p.x)
-    elCircle.setAttribute('cy', p.y)
-
-    console.log(p.x, p.y)
-
-    if (timeDis > duration) {
-      console.log('stop')
-    } else {
-      loopRender()
-    }
-  })
+  canvas.width = w
+  canvas.height = h
 }
+window.onresize()
 
-loopRender()
+gd.arc(canvas.width / 2, canvas.height / 2, 100, 0, 2 * Math.PI)
+gd.fillStyle = '#a00'
+gd.fill()
+
+const n = 100e4
+
+console.time('test diff r')
+for (let i = 0; i < n; i++) {
+  const x = 100
+  const y = 100
+
+  // gd.arc(canvas.width / 2, canvas.height / 2, 100, 0, 2 * Math.PI)
+  gd.beginPath()
+  gd.rect(0, 0, 100, 100)
+
+  const cx = 100 / 2
+  const cy = 100 / 2
+
+  const a = cx - x
+  const b = cy - y
+
+  const r = 100
+
+  if (a * a + b * b < r * r) {
+
+  }
+}
+console.timeEnd('test diff r')
+
+console.time('test isPointInPath')
+for (let i = 0; i < n; i++) {
+  gd.beginPath()
+  gd.rect(0, 0, 100, 100)
+  gd.isPointInPath(100, 100)
+}
+console.timeEnd('test isPointInPath')
+
 </script>
-
+  
 </body>
 </html>

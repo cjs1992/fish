@@ -9,53 +9,71 @@ const me = new Scene({
 }, (me, d) => {
   let iLeft = 0
 
-  setInterval(() => {
-    if (d.fishs.length > 500) return
+  for (let i = 1; i <= 12; i++) {
+    const link = 'fish' + i
+    const iLeft_ = iLeft
+    const el = pList[link]
 
-    for (let j = 0; j < 20; j++) {
-      let type = rand(1, 4096)
+    iLeft += el.width
 
-      for (let i = 11; i > -1; i--) {
-        if (type >= Math.pow(2, i)) {
-          type = 12 - i
-          break
-        }
-      }
+    d.fishs.push(new Fish(link, {
+      // usingCurve: true,
+      // v: 2,
+      points: [
+        {x: iLeft_ + el.width / 2, y: d.h / 2},
+        {x: d.w / 2, y: d.h / 2},
+        {x: rand(0, d.w), y: rand(0, d.h)},
+      ]
+    }))
+  }
 
-      const link = 'fish' + type
-      const el = pList[link]
+  // setInterval(() => {
+  //   const row = Math.ceil(d.w / 40)
+  //   const col = Math.ceil(d.h / 40)
+  //   const maxFish = row * col
 
-      let deg1 = rand(0, 3600) / 10
-      let deg2 = rand(0, 3600) / 10
+  //   if (d.fishs.length > maxFish) return
 
-      // while (Math.abs(deg2 - deg1) < 15) {
-      //   deg2 = rand(0, 3600) / 10
-      // }
+  //   for (let j = 0; j < 50; j++) {
+  //     let type = rand(1, 4096)
 
-      const angle1 = d2a(deg1)
-      const angle3 = d2a(deg2)
+  //     for (let i = 11; i > -1; i--) {
+  //       if (type >= Math.pow(2, i)) {
+  //         type = 12 - i
+  //         break
+  //       }
+  //     }
 
-      const x1 = Math.cos(angle1) * d.edgeR + d.w / 2
-      const y1 = Math.sin(angle1) * d.edgeR + d.h / 2
+  //     const link = 'fish' + type
+  //     const el = pList[link]
 
-      const x3 = Math.cos(angle3) * d.edgeR + d.w / 2
-      const y3 = Math.sin(angle3) * d.edgeR + d.h / 2
+  //     let deg1 = rand(0, 3600) / 10
+  //     let deg2 = rand(0, 3600) / 10
 
-      d.fishs.unshift(new Fish(link, {
-        // usingCurve: Math.random() < .5,
-        // usingCurve: true,
-        listScope: 'fishs',
-        points: [
-          {x: x1, y: y1},
-          {x: d.w / 2, y: d.h / 2},
-          {x: x3, y: y3},
-        ],
-        v: rand(500, 1000) / 500,
-      }))
-    }
-  }, 200)
+  //     const angle1 = d2a(deg1)
+  //     const angle3 = d2a(deg2)
 
-  me.render()
+  //     const x1 = Math.cos(angle1) * d.edgeR + d.w / 2
+  //     const y1 = Math.sin(angle1) * d.edgeR + d.h / 2
+
+  //     const x3 = Math.cos(angle3) * d.edgeR + d.w / 2
+  //     const y3 = Math.sin(angle3) * d.edgeR + d.h / 2
+
+  //     d.fishs.unshift(new Fish(link, {
+  //       // usingCurve: Math.random() < .5,
+  //       // usingCurve: true,
+  //       listScope: 'fishs',
+  //       points: [
+  //         {x: x1, y: y1},
+  //         {x: d.w / 2, y: d.h / 2},
+  //         {x: x3, y: y3},
+  //       ],
+  //       v: rand(500, 1000) / 500,
+  //     }))
+  //   }
+  // }, 200)
+
+  // me.render()
 })
 
 const d = me.d

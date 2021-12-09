@@ -2,9 +2,8 @@ class Cannon extends Sprite {
   constructor(link, d = {}) {
     super(...arguments)
 
-    d.fric = 10
     d.curFrame = 5
-    d.fric = 4
+    d.fric = 2
   }
   nextFrame(scene) {
     const me = this
