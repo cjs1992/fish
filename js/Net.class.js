@@ -19,7 +19,7 @@ class Net extends Sprite {
       return
     }
 
-    const scale = 1 + (d.curFrame > 5 ? 5 - d.curFrame + 5 : d.curFrame) / 8
+    const scale = .5 + (d.curFrame > 5 ? 5 - d.curFrame + 5 : d.curFrame) / 8
     d.scale = [scale, scale]
   }
 }

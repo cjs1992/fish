@@ -91,6 +91,12 @@ class Bullet extends Sprite {
     
     fish.d.blood -= bullet.d.hurt
 
+    if (fish.d.isAlive && fish.d.blood <= 0) {
+      scene.d.score += fish.d.el.reward
+      fish.d.curFrame = fish.d.el.frameAlive[1]
+      fish.d.isAlive = false
+    }
+
     scene.d.nets.push(new Net(bullet.d.link.replace('bullet', 'net'), {
       x: bullet.d.x,
       y: bullet.d.y,

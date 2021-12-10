@@ -2,6 +2,7 @@ class Fish extends Sprite {
   constructor(link, d = {}) {
     super(...arguments)
 
+    d = this.d
     d.v = d.v || 0
     d.fric = d.v ? Math.ceil(10 - d.v) : 8
     d.curFrame = 0
@@ -12,7 +13,7 @@ class Fish extends Sprite {
       {x: x1, y: y1},
       {x: x2, y: y2},
       {x: x3, y: y3},
-    ] = d.points
+    ] = d.points || Array(3).fill({})
 
     if (d.usingCurve) {
       const g = document.createElementNS(d.svgNS, 'g')
@@ -33,21 +34,30 @@ class Fish extends Sprite {
       d.curLength = 0
     } else {
       // 计算斜率
-      const rotation = d.rotation = Math.atan2((y3 - y1), (x3 - x1))
-      d.vx = Math.cos(rotation) * d.v
-      d.vy = Math.sin(rotation) * d.v
+      d.rotation = Math.atan2((y3 - y1), (x3 - x1))
+      d.vx = Math.cos(d.rotation) * d.v
+      d.vy = Math.sin(d.rotation) * d.v
       d.x = d.x || x1
       d.y = d.y || y1
-      console.log(d.x, d.y)
+      // console.log(d.x, d.y)
     }
   }
   nextFrame(scene) {
     const me = this
     const d = me.d
 
-    // console.log(scene.d.countFrame, d.fric)
     scene.d.countFrame % d.fric === 0 && d.curFrame++
-    d.curFrame %= (d.el.frameAlive[1] + 1)
+
+    if (!d.isAlive) {
+      // 鱼死了
+      if (d.curFrame === d.el.frameDie[1] + 1) {
+        scene.d.fishs.remove(me)
+      }
+      return
+    } else {
+      d.curFrame %= (d.el.frameAlive[1] + 1)
+    }
+
 
     if (!d.v) return
 
@@ -67,21 +77,17 @@ class Fish extends Sprite {
       const y2 = d.y = p2.y
 
       if (len2 < d.totalLength) {
-        // 继续前进
         d.rotation = Math.atan2(y2 - y1, x2 - x1)
       } else {
-        // stop
         scene.d.fishs.remove(me)
       }
     } else {
-      const elW = d.el.width * 2
-
       d.x += d.vx
       d.y += d.vy
 
       if (
-        d.x < -elW || d.x > scene.d.w + elW ||
-        d.y < -elW || d.y > scene.d.h + elW
+        d.x < -d.el.width || d.x > scene.d.w + d.el.width ||
+        d.y < -d.el.height || d.y > scene.d.h + d.el.height
       ) {
         scene.d.fishs.remove(me)
       }

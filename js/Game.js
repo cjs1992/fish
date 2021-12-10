@@ -7,73 +7,92 @@ const me = new Scene({
     })
   })
 }, (me, d) => {
-  let iLeft = 0
+  {
+    // const el = d.el
+    // let iLeft = 0
 
-  for (let i = 1; i <= 12; i++) {
-    const link = 'fish' + i
-    const iLeft_ = iLeft
-    const el = pList[link]
-
-    iLeft += el.width
-
-    d.fishs.push(new Fish(link, {
-      // usingCurve: true,
-      // v: 2,
-      points: [
-        {x: iLeft_ + el.width / 2, y: d.h / 2},
-        {x: d.w / 2, y: d.h / 2},
-        {x: rand(0, d.w), y: rand(0, d.h)},
-      ]
-    }))
+    // for (let i = 0; i < 12; i++) {
+    //   const link = 'fish' + (i + 1)
+    //   const el = pList[link]
+    //   const iLeft_ = iLeft
+    //   iLeft += pList[link].width
+    //   d.fishs.push(new Fish(link, {
+    //     points: [
+    //       {x: iLeft_ + el.width / 2, y: d.h / 2},
+    //       {x: 0, y: 0},
+    //       {x: d.w, y: d.h / 2},
+    //     ]
+    //   }))
+    // }
   }
 
+  setInterval(() => {
+    const row = Math.ceil(d.w / 50)
+    const col = Math.ceil(d.h / 50)
+    const maxFish = row * col
+    // const maxFish = 10
+    const perFish = Math.ceil(maxFish / 100)
+
+    document.title = 'max:' + maxFish + ' per-' + perFish + ' len-' + d.fishs.length
+    if (d.fishs.length > maxFish) return
+
+    for (let i = 1; i <= perFish; i++) {
+      let n = rand(1, 4096)
+
+      for (let j = 11; j > -1; j--) {
+        if (n > Math.pow(2, j)) {
+          n = 12 - j
+          break
+        }
+      }
+
+      const link = 'fish' + n
+      const el = pList[link]
+
+      const cx = d.w / 2
+      const cy = d.h / 2
+      const angle = rand(0, 360)
+
+      let x1 = 0
+      let y1 = 0
+
+      let l = -el.width / 2
+      let r = d.w + el.width / 2
+
+      let t = -el.height / 2
+      let b = d.h + el.height / 2
+
+      if (Math.random() < .5) {
+        // 左右
+        x1 = Math.random() < .5 ? l : r
+        y1 = rand(t, b)
+      } else {
+        // 上下
+        x1 = rand(l, r)
+        y1 = Math.random() < .5 ? t : b
+      }
+
+      const x3 = rand(0, d.w)
+      const y3 = rand(0, d.h)
+
+      d.fishs.push(new Fish('fish' + n, {
+        // usingCurve: true,
+        v: rand(300, 1000) / 500,
+        points: [
+          {x: x1, y: y1},
+          {x: d.w / 2, y: d.h / 2},
+          {x: x3, y: y3},
+        ]
+      }))
+    }
+  }, 300)
+
   // setInterval(() => {
-  //   const row = Math.ceil(d.w / 40)
-  //   const col = Math.ceil(d.h / 40)
-  //   const maxFish = row * col
-
-  //   if (d.fishs.length > maxFish) return
-
-  //   for (let j = 0; j < 50; j++) {
-  //     let type = rand(1, 4096)
-
-  //     for (let i = 11; i > -1; i--) {
-  //       if (type >= Math.pow(2, i)) {
-  //         type = 12 - i
-  //         break
-  //       }
-  //     }
-
-  //     const link = 'fish' + type
-  //     const el = pList[link]
-
-  //     let deg1 = rand(0, 3600) / 10
-  //     let deg2 = rand(0, 3600) / 10
-
-  //     const angle1 = d2a(deg1)
-  //     const angle3 = d2a(deg2)
-
-  //     const x1 = Math.cos(angle1) * d.edgeR + d.w / 2
-  //     const y1 = Math.sin(angle1) * d.edgeR + d.h / 2
-
-  //     const x3 = Math.cos(angle3) * d.edgeR + d.w / 2
-  //     const y3 = Math.sin(angle3) * d.edgeR + d.h / 2
-
-  //     d.fishs.unshift(new Fish(link, {
-  //       // usingCurve: Math.random() < .5,
-  //       // usingCurve: true,
-  //       listScope: 'fishs',
-  //       points: [
-  //         {x: x1, y: y1},
-  //         {x: d.w / 2, y: d.h / 2},
-  //         {x: x3, y: y3},
-  //       ],
-  //       v: rand(500, 1000) / 500,
-  //     }))
-  //   }
-  // }, 200)
-
-  // me.render()
+  //   me.handleStart({
+  //     clientX: d.w / 2,
+  //     clientY: d.h / 5,
+  //   })
+  // }, 150)
 })
 
 const d = me.d

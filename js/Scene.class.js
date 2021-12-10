@@ -4,7 +4,7 @@ class Scene {
 
     d.edgeR = 500
     d.countFrame = 0
-    d.score = 123
+    d.score = 0
     d.gd = d.canvas.getContext('2d')
     d.mouse = {
       x: 0,
@@ -94,7 +94,7 @@ class Scene {
     }
     window.onresize()
 
-    const handleStart = (e) => {
+    const handleStart = me.handleStart = (e) => {
       // 调整 cannon rotation
       handleMove(e)
 
@@ -121,7 +121,7 @@ class Scene {
       d.bullets = d.bullets.concat(bullets)
     }
 
-    const handleMove = (e) => {
+    const handleMove = me.handleMove = (e) => {
       const x1 = d.mouse.x = e.clientX || e.touches?.[0]?.clientX
       const y1 = d.mouse.y = e.clientY || e.touches?.[0]?.clientY
 
@@ -161,8 +161,9 @@ class Scene {
     const d = me.d
     const canvas = d.canvas
     const gd = d.gd
+    const listObj = [d.fishs, d.coins, d.nets, d.bottom, d.cannons, d.bullets].flat()
 
-    document.title = d.fishs.length
+    // document.title = d.fishs.length
     gd.clearRect(0, 0, canvas.width, canvas.height)
 
     gd.save()
@@ -172,79 +173,6 @@ class Scene {
     // gd.fillStyle = 'rgba(255,0,0,.2)'
     // gd.fill()
     
-    gd.font = 'bold 20px Arial'
-    gd.textAlign = 'center'
-    gd.textBaseline = 'middle'
-
-    ;[d.fishs, d.coins, d.nets, d.bottom, d.cannons, d.bullets].forEach((row) => {
-      row.forEach((v) => {
-        if (!v) return
-          
-        v.nextFrame(me)
-
-        const d = v.d
-        const el = d.el
-
-        gd.save()
-        gd.translate(d.x, d.y)
-        d.rotation && gd.rotate(d.rotation)
-        d.scale && gd.scale(d.scale[0], d.scale[1])
-        // gd.beginPath()
-        // gd.fillStyle = 'rgba(255,0,0,.3)'
-        // gd.fillRect(-el.width / 2, -el.height / 2, el.width - 1, el.height)
-
-        gd.beginPath()
-
-        if (el.frameAlive) {
-          gd.fillStyle = 'rgba(0,255,0,.2)'
-          gd.rect(
-            -el.rec.width / 2 + el.rec.x,
-            -el.rec.height / 2 + el.rec.y/* - ((el.height - el.rec.height) / 2)*/,
-            el.rec.width,
-            el.rec.height,
-          )
-          gd.fill()
-
-          for (let i = 0; i  < me.d.bullets.length; i++) {
-            const bullet = me.d.bullets[i]
-
-            if (v.d.isAlive && gd.isPointInPath(bullet.d.x, bullet.d.y)) {
-              bullet.attack(me, v)
-              me.d.bullets.remove(bullet)
-              i--
-            }
-          }
-
-          gd.beginPath()
-          gd.drawImage(
-            el.img,
-            el.x, d.curFrame * el.height, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-
-          gd.save()
-          gd.translate(el.width / 2, 0)
-          gd.rotate(d2a(90))
-          gd.fillStyle = 'red'
-          gd.fillText(d.blood, 0, 0)
-          gd.restore()
-        } else if (d.isCannon) {
-          gd.drawImage(
-            el.img,
-            el.x, (d.curFrame < 5 ? d.curFrame : 0) * el.height, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-        } else {
-          gd.drawImage(
-            el.img,
-            el.x, el.y, el.width, el.height,
-            -el.width / 2, -el.height / 2, el.width, el.height,
-          )
-        }
-        gd.restore()
-      })
-    })
-
     ;[d.fishs, d.bullets].forEach((row) => {
       row.forEach((v) => {
         const d = v.d
@@ -292,6 +220,78 @@ class Scene {
         }
       })
     })
+
+    gd.font = 'bold 16px Arial'
+    gd.textAlign = 'center'
+    gd.textBaseline = 'middle'
+
+    for (let i = 0; i < listObj.length; i++) {
+      const v = listObj[i]
+      const d = v.d
+      const el = d.el
+
+      v.nextFrame(me)
+
+      gd.save()
+      gd.translate(d.x, d.y)
+      d.rotation && gd.rotate(d.rotation)
+      d.scale && gd.scale(d.scale[0], d.scale[1])
+      // gd.beginPath()
+      // gd.fillStyle = 'rgba(255,0,0,.3)'
+      // gd.fillRect(-el.width / 2, -el.height / 2, el.width - 1, el.height)
+
+      gd.beginPath()
+
+      if (el.frameAlive) {
+        gd.rect(
+          -el.rec.width / 2 + el.rec.x,
+          -el.rec.height / 2 + el.rec.y/* - ((el.height - el.rec.height) / 2)*/,
+          el.rec.width,
+          el.rec.height,
+        )
+        // gd.fillStyle = 'rgba(0,255,0,.5)'
+        // gd.fill()
+
+        for (let j = 0; j  < me.d.bullets.length; j++) {
+          const bullet = me.d.bullets[j]
+
+          if (v.d.isAlive && gd.isPointInPath(bullet.d.x, bullet.d.y)) {
+            bullet.attack(me, v)
+            me.d.bullets.remove(bullet)
+            j--
+
+            if (!v.isAlive) i--
+          }
+        }
+
+        gd.beginPath()
+        gd.drawImage(
+          el.img,
+          el.x, d.curFrame * el.height, el.width, el.height,
+          -el.width / 2, -el.height / 2, el.width, el.height,
+        )
+
+        // gd.save()
+        // gd.translate(el.width / 2, 0)
+        // gd.rotate(d2a(90))
+        // gd.fillStyle = 'red'
+        // gd.fillText(d.blood + '-' + d.el.reward, -10, 0)
+        // gd.restore()
+      } else if (d.isCannon) {
+        gd.drawImage(
+          el.img,
+          el.x, (d.curFrame < 5 ? d.curFrame : 0) * el.height, el.width, el.height,
+          -el.width / 2, -el.height / 2, el.width, el.height,
+        )
+      } else {
+        gd.drawImage(
+          el.img,
+          el.x, el.y, el.width, el.height,
+          -el.width / 2, -el.height / 2, el.width, el.height,
+        )
+      }
+      gd.restore()
+    }
 
     // 绘制分数
     {
