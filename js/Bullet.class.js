@@ -1,105 +1,48 @@
 class Bullet extends Sprite {
-  constructor(link, d = {}) {
+  constructor() {
     super(...arguments)
 
-    const x1 = d.x1
-    const y1 = d.y1
+    const me = this
+    const {x1, y1, x4, y4} = me
 
-    const x4 = d.x4
-    const y4 = d.y4
+    const x2 = x1
+    const y2 = (y1 + y4) / 2
 
-    d.hurt = d.el.hurt
-    d.v = d.v || 10
+    const x3 = x4
+    const y3 = (y1 + y4) / 2
 
-    if (d.usingCurve) {
-      const x2 = x4
-      const y2 = (y1 + y4) / 2
+    me.points = [
+      {x1, y1},
+      {x2, y2},
+      {x3, y3},
+      {x4, y4},
+    ]
+    me.x = me.x || x1
+    me.y = me.y || y1
 
-      const x3 = x1
-      const y3 = (y1 + y4) / 2
+    if (me.usingCurve) {
 
-      const points = d.points = [
-        {x: x1, y: y1},
-        {x: x2, y: y2},
-        {x: x3, y: y3},
-        {x: x4, y: y4},
-      ]
-      const g = document.createElementNS(d.svgNS, 'g')
-
-      g.innerHTML = `
-        <path
-          d="M ${x1} ${y1} C ${x2} ${y2}, ${x3} ${y3}, ${x4} ${y4}"
-          fill="transparent"
-          stroke-width="2"
-          stroke="wheat"
-        ></path>
-      `.trim()
-
-      d.x = x1
-      d.y = y1
-      d.path = g.children[0]
-      d.totalLength = d.path.getTotalLength()
-      d.curLength = 0
-    } else if (d.v) {
-      // 计算斜率
-      const rotation = Math.atan2((y4 - y1), (x4 - x1))
-      d.vx = Math.cos(rotation) * d.v
-      d.vy = Math.sin(rotation) * d.v
-      d.rotation = d2a(a2d(rotation) + 90)
+    } else {
+      const angle = me.rotation = Math.atan2(y4 - y1, x4 - x1)
+      me.vx = Math.cos(angle) * me.v
+      me.vy = Math.sin(angle) * me.v
     }
   }
   nextFrame(scene) {
     const me = this
-    const d = me.d
+    
+    if (me.usingCurve) {
 
-    if (d.usingCurve) {
-      d.curLength += d.v
-
-      const len1 = d.curLength
-      const len2 = len1 + 3
-
-      const p1 = d.path.getPointAtLength(len1)
-      const p2 = d.path.getPointAtLength(len2)
-
-      const x1 = d.x = p1.x
-      const y1 = d.y = p1.y
-
-      const x2 = d.x = p2.x
-      const y2 = d.y = p2.y
-
-      if (len2 < d.totalLength) {
-        // 继续前进
-        d.rotation = d2a(a2d(Math.atan2(y2 - y1, x2 - x1)) + 90)
-      } else {
-        // stop
-        scene.d[me.d.listScope].remove(me)
-      }
     } else {
-      d.x += d.vx
-      d.y += d.vy
+      me.x += me.vx
+      me.y += me.vy
 
       if (
-        d.x < 0 || d.x > scene.d.w ||
-        d.y < 0 || d.y > scene.d.h
+        me.x < 0 || me.x > scene.w ||
+        me.y < 0 || me.y > scene.h
       ) {
-        scene.d.bullets.remove(me)
+        scene.bullets.remove(me)
       }
     }
-  }
-  attack(scene, fish) {
-    const bullet = this
-    
-    fish.d.blood -= bullet.d.hurt
-
-    if (fish.d.isAlive && fish.d.blood <= 0) {
-      scene.d.score += fish.d.el.reward
-      fish.d.curFrame = fish.d.el.frameAlive[1]
-      fish.d.isAlive = false
-    }
-
-    scene.d.nets.push(new Net(bullet.d.link.replace('bullet', 'net'), {
-      x: bullet.d.x,
-      y: bullet.d.y,
-    }))
   }
 }

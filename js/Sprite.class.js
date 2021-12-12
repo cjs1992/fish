@@ -1,28 +1,16 @@
 class Sprite {
-  constructor(link, d = {}) {
+  constructor(d = {}) {
     const me = this
 
-    me.d = d
-    d.link = link
-    d.el = pList[d.link]
-    d.x = d.x || d.x1 || 0
-    d.y = d.y || d.y1 || 0
-    d.curFrame = 0
-    d.fric = 10
-    d.svgNS = 'http://www.w3.org/2000/svg'
+    Object.assign(me, d)
 
-    d.isCannon = /cannon/i.test(d.link)
-    d.isBullet = /bullet/i.test(d.link)
-    d.isFish = /fish/i.test(d.link)
+    d.el = pList[d.link]
+
+    for (let key in d) {
+      me[key] = d[key]
+    }
   }
   nextFrame(scene) {
-    const me = this
-    const d = me.d
-    const countFrame = scene.d.countFrame
     
-    if (d.vx || d.vy) {
-      d.x += d.vx
-      d.y += d.vy
-    }
   }
 }

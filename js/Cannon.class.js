@@ -1,14 +1,18 @@
 class Cannon extends Sprite {
-  constructor(link, d = {}) {
+  constructor() {
     super(...arguments)
 
-    d.curFrame = 5
-    d.fric = 2
+    const me = this
+
+    me.isCannon = true
+    me.curFrame = 0
+    me.fric = 2
   }
   nextFrame(scene) {
     const me = this
-    const d = me.d
 
-    scene.d.countFrame % d.fric === 0 && d.curFrame++
+    if (me.curFrame < 5 && scene.countFrame % me.fric === 0) {
+      me.curFrame++
+    }
   }
 }
