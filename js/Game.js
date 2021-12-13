@@ -35,7 +35,7 @@ me.init().then((me) => {
     const col = Math.ceil(me.h / 50)
     const maxFish = row * col
     // const maxFish = 10
-    const perFish = Math.ceil(maxFish / 100)
+    const perFish = Math.ceil(maxFish / 40)
     const log = document.getElementById('log')
     log.innerHTML = `
       fps:${me.fps} &nbsp;
