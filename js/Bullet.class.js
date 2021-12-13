@@ -55,9 +55,34 @@ class Bullet extends Sprite {
     scene.bullets.remove(me)
 
     if (!fish.isDie && fish.blood <= 0) {
+      const reward = fish.el.reward
       fish.isDie = true
+      fish.v = fish.vx = fish.vy = 0
       fish.curFrame = fish.el.totalFrame / 2
-      scene.score += fish.el.reward
+      // scene.score += fish.el.reward
+
+      const gold = Math.floor(reward / 10)
+      const silver = reward % 10
+      const totalCoin = gold + silver
+
+      scene.coinTexts.push(new CoinText({
+        link: 'coinText',
+        reward: 'x' + reward.toString(),
+        x: fish.x,
+        y: fish.y,
+      }))
+
+      for (let i = 0; i < totalCoin; i++) {
+        setTimeout(() => {
+          const link = 'coin' + (i < gold ? 2 : 1)
+
+          scene.coins.push(new Coin({
+            link,
+            x: fish.x + rand(-50, 50),
+            y: fish.y + rand(-50, 50),
+          }))
+        }, i * 100)
+      }
     }
 
     scene.nets.push(new Net({

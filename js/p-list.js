@@ -69,7 +69,7 @@ const pList = {
   "fish1": {
     "src": "./img/fish1.png",
     "x": 0, "y": 0, "width": 55, "height": 37,
-    "blood": Math.ceil(Math.pow(1.7, 1) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 1) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 1)),
     "totalFrame": 8,
     "rec": {"x": 5, "y": -7, "width": 40, "height": 20},
@@ -77,7 +77,7 @@ const pList = {
   "fish2": {
     "src": "./img/fish2.png",
     "x": 0, "y": 0, "width": 78, "height": 64,
-    "blood": Math.ceil(Math.pow(1.7, 2) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 2) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 2)),
     "totalFrame": 8,
     "rec": {"x": 10, "y": -12, "width": 60, "height": 24},
@@ -85,7 +85,7 @@ const pList = {
   "fish3": {
     "src": "./img/fish3.png",
     "x": 0, "y": 0, "width": 72, "height": 56,
-    "blood": Math.ceil(Math.pow(1.7, 3) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 3) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 3)),
     "totalFrame": 8,
     "rec": {"x": 10, "y": -12, "width": 50, "height": 24},
@@ -93,7 +93,7 @@ const pList = {
   "fish4": {
     "src": "./img/fish4.png",
     "x": 0, "y": 0, "width": 77, "height": 59,
-    "blood": Math.ceil(Math.pow(1.7, 4) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 4) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 4)),
     "totalFrame": 8,
     "rec": {"x": 10, "y": -16, "width": 50, "height": 26},
@@ -101,7 +101,7 @@ const pList = {
   "fish5": {
     "src": "./img/fish5.png",
     "x": 0, "y": 0, "width": 107, "height": 122,
-    "blood": Math.ceil(Math.pow(1.7, 5) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 5) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 5)),
     "totalFrame": 8,
     "rec": {"x": 14, "y": -10, "width": 60, "height": 45},
@@ -109,7 +109,7 @@ const pList = {
   "fish6": {
     "src": "./img/fish6.png",
     "x": 0, "y": 0, "width": 105, "height": 79,
-    "blood": Math.ceil(Math.pow(1.7, 6) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 6) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 6)),
     "totalFrame": 12,
     "rec": {"x": 15, "y": -10, "width": 60, "height": 50},
@@ -117,7 +117,7 @@ const pList = {
   "fish7": {
     "src": "./img/fish7.png",
     "x": 0, "y": 0, "width": 92, "height": 151,
-    "blood": Math.ceil(Math.pow(1.7, 7) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 7) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 7)),
     "totalFrame": 10,
     "rec": {"x": 5, "y": -35, "width": 65, "height": 70},
@@ -125,7 +125,7 @@ const pList = {
   "fish8": {
     "src": "./img/fish8.png",
     "x": 0, "y": 0, "width": 174, "height": 126,
-    "blood": Math.ceil(Math.pow(1.7, 8) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 8) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 8)),
     "totalFrame": 12,
     "rec": {"x": -10, "y": -17, "width": 80, "height": 50},
@@ -133,7 +133,7 @@ const pList = {
   "fish9": {
     "src": "./img/fish9.png",
     "x": 0, "y": 0, "width": 166, "height": 183,
-    "blood": Math.ceil(Math.pow(1.7, 9) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 9) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 9)),
     "totalFrame": 12,
     "rec": {"x": 27, "y": -15, "width": 100, "height": 100},
@@ -141,7 +141,7 @@ const pList = {
   "fish10": {
     "src": "./img/fish10.png",
     "x": 0, "y": 0, "width": 178, "height": 187,
-    "blood": Math.ceil(Math.pow(1.7, 10) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 10) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 10)),
     "totalFrame": 10,
     "rec": {"x": 0, "y": -20, "width": 120, "height": 90},
@@ -149,7 +149,7 @@ const pList = {
   "fish11": {
     "src": "./img/fish11.png",
     "x": 0, "y": 0, "width": 509, "height": 270,
-    "blood": Math.ceil(Math.pow(1.7, 11) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 11) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 11)),
     "totalFrame": 12,
     "rec": {"x": 45, "y": -5, "width": 400, "height": 60},
@@ -157,7 +157,7 @@ const pList = {
   "fish12": {
     "src": "./img/fish12.png",
     "x": 0, "y": 0, "width": 516, "height": 273,
-    "blood": Math.ceil(Math.pow(1.7, 12) * 1.8),
+    "blood": Math.ceil(Math.pow(1.6, 12) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 12)),
     "totalFrame": 12,
     "rec": {"x": 40, "y": -5, "width": 400, "height": 60},

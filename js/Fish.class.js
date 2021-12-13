@@ -13,7 +13,7 @@ class Fish extends Sprite {
     me.isFish = true
     me.v = me.v || 0
     me.blood = el.blood
-    me.fric = Math.ceil(10 - me.v)
+    me.fric = Math.ceil(10 - me.v / 2)
     me.fric < 1 && (me.fric = 1)
 
     if (me.usingCurve) {
@@ -31,6 +31,11 @@ class Fish extends Sprite {
     const el = me.el
 
     scene.countFrame % me.fric === 0 && me.curFrame++
+
+    if (me.isDie && me.curFrame >= me.el.totalFrame) {
+      scene.fishs.remove(me)
+      return
+    }
 
     if (me.usingCurve) {
 

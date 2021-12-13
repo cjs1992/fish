@@ -4,6 +4,7 @@ class Cannon extends Sprite {
 
     const me = this
 
+    me.curFrame = 10
     me.isCannon = true
     me.fric = 2
   }
