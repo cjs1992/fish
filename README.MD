@@ -19,3 +19,9 @@ https://support.lenovo.com.cn/lenovo/wsi/Modules/DriverDetail.aspx?ID=39106
 
 Windows 10 64-bit
 https://support.lenovo.com.cn/lenovo/wsi/Modules/DriverDetail.aspx?ID=52118
+
+
+<!-- vue3 -->
+https://v3.cn.vuejs.org/guide/introduction.html
+
+https://www.vuemastery.com/courses/intro-to-vue-3/creating-the-vue-app-vue3

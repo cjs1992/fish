@@ -5,6 +5,7 @@ class Scene {
     Object.assign(me, d)
 
     me.fps = 0
+    me.score = 0
     me.timeFps = 0
     me.countFrame = 10
     me.mouse = {
@@ -15,9 +16,10 @@ class Scene {
       {link: 'bottom', el: pList['bottom'], scale: [1, 1]},
       {link: 'bottom', el: pList['bottom'], scale: [-1, 1]},
     ]
-    me.bullets = []
     me.fishs = []
+    me.bullets = []
     me.coins = []
+    me.nets = []
 
     me.gd = me.canvas.getContext('2d')
   }
@@ -118,7 +120,7 @@ class Scene {
       me.timerAni = requestAnimationFrame(() => {
         ++me.countFrame
 
-        ;[me.cannons, me.bullets, me.coins, me.fishs].flat().forEach((v) => {
+        ;[me.fishs, me.bullets, me.nets, me.coins, me.cannons].flat().forEach((v) => {
           v.nextFrame(me)
         })
 
@@ -132,11 +134,15 @@ class Scene {
   render() {
     const me = this
     const {canvas, gd} = me
-    const els = [me.fishs, me.bullets, me.coins, me.cannons, me.bottoms].flat()
+    const els = [me.fishs, me.bullets, me.nets, me.coins, me.cannons, me.bottoms].flat()
 
     me.fps = Math.ceil(1000 / (Date.now() - me.timeFps))
     me.timeFps = Date.now()
     // document.title = 'me.fishs.length: ' + me.fishs.length
+
+    gd.font = '18px Arial'
+    gd.textAlign = 'center'
+    gd.textBaseline = 'middle'
 
     gd.clearRect(0, 0, me.w, me.h)
     gd.save()
@@ -149,28 +155,45 @@ class Scene {
       gd.translate(v.x, v.y)
       v.rotation && gd.rotate(v.rotation)
       v.scale && gd.scale(v.scale[0], v.scale[1])
+      gd.beginPath()
 
-      if (v.isCannon) {
-        gd.drawImage(
-          el.img,
-          el.x, (v.curFrame < 5 ? v.curFrame : 0) * el.height, el.width, el.height,
-          -el.width / 2, -el.height / 2, el.width, el.height,
-        )
-      } else if (v.isFish) {
+      if (v.isFish) {
         const half = el.totalFrame / 2
 
         gd.drawImage(
           el.img,
-          el.x, (v.isDie ? half + v.curFrame : v.curFrame) * el.height, el.width, el.height,
+          el.x, (v.isDie ? half + v.curFrame % half : v.curFrame % half) * el.height, el.width, el.height,
           -el.width / 2, -el.height / 2, el.width, el.height,
         )
 
-        gd.fillStyle = 'rgba(0,170,255,.3)'
-        gd.fillRect(
+        gd.fillStyle = 'rgba(255,170,0,.5)'
+        gd.beginPath()
+        gd.rect(
           el.rec.x - el.rec.width / 2,
           el.rec.y - el.rec.height / 2,
           el.rec.width,
           el.rec.height,
+        )
+        gd.fill()
+
+        me.bullets.forEach((bullet) => {
+          if (!v.isDie && gd.isPointInPath(bullet.x, bullet.y)) {
+            bullet.attack(v, me)
+            els.remove(bullet)
+          }
+        })
+
+        gd.save()
+        gd.translate(el.width / 2, -10)
+        gd.rotate(d2a(90))
+        gd.fillStyle = 'red'
+        gd.fillText(v.blood + ' - ' + v.el.reward, 0, 0)
+        gd.restore()
+      } else if (v.isCannon) {
+        gd.drawImage(
+          el.img,
+          el.x, (v.curFrame < 5 ? v.curFrame : 0) * el.height, el.width, el.height,
+          -el.width / 2, -el.height / 2, el.width, el.height,
         )
       } else {
         gd.drawImage(

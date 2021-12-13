@@ -5,7 +5,6 @@ class Cannon extends Sprite {
     const me = this
 
     me.isCannon = true
-    me.curFrame = 0
     me.fric = 2
   }
   nextFrame(scene) {

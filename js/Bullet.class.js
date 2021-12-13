@@ -11,6 +11,8 @@ class Bullet extends Sprite {
     const x3 = x4
     const y3 = (y1 + y4) / 2
 
+    const el = me.el
+
     me.points = [
       {x1, y1},
       {x2, y2},
@@ -44,5 +46,24 @@ class Bullet extends Sprite {
         scene.bullets.remove(me)
       }
     }
+  }
+  attack(fish, scene) {
+    const me = this
+    const link = me.link.replace('bullet', 'net')
+ 
+    fish.blood -= me.el.hurt
+    scene.bullets.remove(me)
+
+    if (!fish.isDie && fish.blood <= 0) {
+      fish.isDie = true
+      fish.curFrame = fish.el.totalFrame / 2
+      scene.score += fish.el.reward
+    }
+
+    scene.nets.push(new Net({
+      link,
+      x: me.x,
+      y: me.y,
+    }))
   }
 }

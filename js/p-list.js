@@ -152,7 +152,7 @@ const pList = {
     "blood": Math.ceil(Math.pow(1.7, 11) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 11)),
     "totalFrame": 12,
-    "rec": {"x": 70, "y": -8, "width": 350, "height": 70},
+    "rec": {"x": 45, "y": -5, "width": 400, "height": 60},
   },
   "fish12": {
     "src": "./img/fish12.png",
@@ -160,7 +160,7 @@ const pList = {
     "blood": Math.ceil(Math.pow(1.7, 12) * 1.8),
     "reward": Math.ceil(Math.pow(1.45, 12)),
     "totalFrame": 12,
-    "rec": {"x": 66, "y": -8, "width": 350, "height": 70},
+    "rec": {"x": 40, "y": -5, "width": 400, "height": 60},
   },
   "net1": {
     "src": "./img/net.png",

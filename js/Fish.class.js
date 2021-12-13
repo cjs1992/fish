@@ -8,10 +8,11 @@ class Fish extends Sprite {
       {x: x2, y: y2},
       {x: x3, y: y3},
     ] = me.points
+    const el = me.el
 
     me.isFish = true
-    me.curFrame = 0
     me.v = me.v || 0
+    me.blood = el.blood
     me.fric = Math.ceil(10 - me.v)
     me.fric < 1 && (me.fric = 1)
 
@@ -29,10 +30,7 @@ class Fish extends Sprite {
     const me = this
     const el = me.el
 
-    if (scene.countFrame % me.fric === 0) {
-      me.curFrame++
-      me.curFrame %= el.totalFrame / 2
-    }
+    scene.countFrame % me.fric === 0 && me.curFrame++
 
     if (me.usingCurve) {
 
